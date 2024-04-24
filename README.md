@@ -1,6 +1,5 @@
 # phase1-2
 shiyan
 
-数据集主要用A1和A2，先用A2
-首先解决train1阶段损失会出现负数的问题。
-解读一下dataset.py的数据处理，他处理会构造一个nx的Graph外还会分训练集验证集和测试集，而且会把metric文件分time窗口，因为fault里面也有解读一下print一下看看
+阶段一在gaishiyan里，运行代码是CRVAE_demon.py 用的是model/cgruerror里的train_phase3 和 train_phase2，新加的损失在torchlinear里面
+阶段二是Run 
