@@ -19,7 +19,7 @@ device = torch.device("cpu" if not torch.cuda.is_available() else "cuda")
 
 # X_np = np.load("henon.npy").T
 # X_np = np.load("train_use_A2.npy")
-X_np = np.load("train_data_sock.npy")
+X_np = np.load("sock-shop-data/carts-cpu/1/normal.npy")
 # X_np = np.load("db_003.npy")
 
 X_np = X_np.astype(np.float32)
