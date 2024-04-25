@@ -25,7 +25,20 @@ class LinearCoModel:
     def _h(self, W: torch.Tensor, s: float = 1.0) -> typing.Tuple[float, torch.Tensor]:
         W = W.to(self.device)  # 确保 W 在正确的设备
         epsilon = 1e-6
-        M = s * self.Id - torch.matmul(W,W)
+        M = None
+        success = False
+
+        while not success:
+            M = s * self.Id - torch.matmul(W, W)
+            try:
+                # 尝试使用 Cholesky 分解来确认 M 是正定的
+                torch.linalg.cholesky(M)
+                success = True
+            except RuntimeError:
+                # 如果 M 不是正定的，增加 s
+                s *= 2
+
+        # M = s * self.Id - torch.matmul(W,W)
         M_inv = torch.linalg.inv(M)
         # 在 M_inv 上加上一个小的常数 epsilon
         M_inv += epsilon * torch.eye(self.d, dtype=torch.float32, device=self.device)
