@@ -117,7 +117,7 @@ class CRVAE(nn.Module):
         super(CRVAE, self).__init__()
 
         # self.device = torch.device('cuda')
-        self.device = torch.device("cpu" if not torch.cuda.is_available() else "cuda:1")
+        self.device = torch.device("cpu" if not torch.cuda.is_available() else "cuda")
 
         self.p = num_series
         self.hidden = hidden
@@ -968,7 +968,7 @@ def train_phase3(
     # liner_loss /= len(X)
 
     X_np = X.cpu().numpy()  # X 是原始的 PyTorch tensor
-    h_model = LinearCoModel(loss_type='l2', lambda1=0.1,device='cuda:1')
+    h_model = LinearCoModel(loss_type='l2', lambda1=0.1,device='cuda')
     s_1=0.1
     mu_1 = 0.5
     # import pdb 

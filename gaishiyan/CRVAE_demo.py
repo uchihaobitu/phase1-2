@@ -5,16 +5,21 @@ Created on Sat Aug  6 20:00:04 2022
 @author: 61995
 """
 
+import os
 import numpy as np
 import torch
 
 from models.cgru_error import CRVAE, VRAE4E, train_phase1,train_phase2,train_phase3,train_phase4
 
+# 这里可以设置使用的GPU
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+
 # device = torch.device('cuda')
-device = torch.device("cpu" if not torch.cuda.is_available() else "cuda:1")
+device = torch.device("cpu" if not torch.cuda.is_available() else "cuda")
 
 # X_np = np.load("henon.npy").T
-X_np = np.load("train_use_A2.npy")
+# X_np = np.load("train_use_A2.npy")
+X_np = np.load("train_data_sock.npy")
 # X_np = np.load("db_003.npy")
 
 X_np = X_np.astype(np.float32)

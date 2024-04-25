@@ -5,7 +5,7 @@ import typing
 import numpy as np
 
 class LinearCoModel:
-    def __init__(self, loss_type='l2', lambda1=0.1,device='cuda:1'):
+    def __init__(self, loss_type='l2', lambda1=0.1,device='cuda'):
         self.device = torch.device(device if torch.cuda.is_available() else "cpu")
         # self.X = torch.tensor(X, device=self.device, dtype=torch.float32)  # 转换为 PyTorch tensor 并移到 GPU
         # self.batch_size, self.n, self.d = X.shape
