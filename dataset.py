@@ -390,8 +390,6 @@ def get_dejavu_dataset(datadir, ratio=0.5, graph_list=False, upsample=15):
     print('y_train',y_train)
     print('y_test',y_test)
 
-
-
     # create train_dataset
     
     type_d = {}
