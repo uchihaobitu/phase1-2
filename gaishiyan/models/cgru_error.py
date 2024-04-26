@@ -53,7 +53,7 @@ class VRAE4E(nn.Module):
         """
         super(VRAE4E, self).__init__()
         # self.device = torch.device('cuda')
-        self.device = torch.device("cpu" if not torch.cuda.is_available() else "cuda:1")
+        self.device = torch.device("cpu" if not torch.cuda.is_available() else "cuda")
 
         self.p = num_series
         self.hidden = hidden
@@ -77,7 +77,12 @@ class VRAE4E(nn.Module):
         return torch.zeros(1, batch, self.hidden, device=device)
 
     def forward(self, X, mode="train"):
-        X = torch.cat((torch.zeros(X.shape, device=self.device)[:, 0:1, :], X), 1)
+        try:
+            X = torch.cat((torch.zeros(X.shape, device=self.device)[:, 0:1, :], X), 1)
+        except Exception as e:
+            import pdb
+            pdb.set_trace()
+            print(e)
         if mode == "train":
             hidden_0 = torch.zeros(1, X.shape[0], self.hidden, device=self.device)
             out, h_t = self.gru_left(X[:, 1:, :], hidden_0.detach())

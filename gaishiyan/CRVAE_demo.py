@@ -13,6 +13,7 @@ from models.cgru_error import CRVAE, VRAE4E, train_phase1,train_phase2,train_pha
 
 # 这里可以设置使用的GPU
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+torch.backends.cudnn.enabled = False
 
 # device = torch.device('cuda')
 device = torch.device("cpu" if not torch.cuda.is_available() else "cuda")
@@ -88,7 +89,8 @@ full_connect = np.load('GC_henon_A2.npy')
 #
 #
 # #%%
-cgru = CRVAE(X.shape[-1], full_connect, hidden=64).cuda(device=device)
+# cgru = CRVAE(X.shape[-1], full_connect, hidden=64).cuda(device=device)
+cgru = CRVAE(X.shape[-1], full_connect, hidden=64).to(device=device)
 vrae = VRAE4E(X.shape[-1], hidden=64).cuda(device=device)
 #
 #
