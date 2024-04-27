@@ -259,7 +259,8 @@ class CRVAE(nn.Module):
         GC = torch.stack(GC)
         # print(GC)
         if threshold:
-            return (torch.abs(GC) > 0.55).int()
+            #return (torch.abs(GC) > 0.55).int()
+            return torch.abs(GC)
         else:
             return GC
 
@@ -298,7 +299,8 @@ class CRVAE(nn.Module):
         # print(GC.shape)
         # print(GC)
         if threshold:
-            return (torch.abs(GC) > 0.5).int()
+            # return (torch.abs(GC) > 0.5).int()
+            return torch.abs(GC)
         else:
             return GC
 
