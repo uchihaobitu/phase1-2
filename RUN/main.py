@@ -57,8 +57,22 @@ def main(datafiles):
     print('edge_pair', edge_pair)
     G = CreateGraph(edge_pair, columns)
 
+    #画图
+    pos = nx.spring_layout(G, k=1.5, iterations=50)  # 增大 k 值和迭代次数
+    node_colors = ['red' if node == 'carts_cpu' else 'lightblue' for node in G.nodes()]
+    nx.draw(G, pos, with_labels=True, node_color=node_colors, font_weight='bold', node_size=700, font_size=9)
+
+    plt.title(f"Graph Visualization for Sample ")
+    plt.figure(figsize=(100, 100))  # 增加图形尺寸
+    plt.show()
+    plt.savefig(f"Graph.png")  # 保存图的可视化到文件
+    plt.close()  # 关闭图形，防止在内存中过多积累
+
+
     edge_correlations = {}
     for source, target in tqdm(G.edges):
+        print('source',pruning[source])
+        print('target',pruning[target])
         edge_correlations[(source, target)] = pearson_correlation(pruning[source], pruning[target])
 
     while not nx.is_directed_acyclic_graph(G):
@@ -80,6 +94,17 @@ def main(datafiles):
         # source, target= edges[tmp_idx[0]][0], edges[tmp_idx[0]][1]
 
         # G.remove_edge(source, target)
+
+     # 生成并保存图形的可视化表示
+    plt.figure(figsize=(10, 8))
+    nx.draw(G, with_labels=True, node_color='lightblue', font_weight='bold', node_size=700, font_size=9)
+
+    plt.title(f"Graph Visualization for Sample ")
+
+    plt.show()
+    plt.savefig(f"Graph.png")  # 保存图的可视化到文件
+    plt.close()  # 关闭图形，防止在内存中过多积累
+
  
     dangling_nodes = [node for node, out_degree in G.out_degree() if out_degree == 0]
     personalization = {}
@@ -141,12 +166,13 @@ if __name__ == "__main__":
     parser.add_argument('--epochs', type=int, default=2)
     parser.add_argument('--learning_rate', type=float, default=0.001)
     parser.add_argument('--optimizer', type=str, default='Adam')
-    parser.add_argument('--trigger_point', type=str, default='os_017##Recv_total', help='Calculate the distance between node and trigger point')
+    parser.add_argument('--trigger_point', type=str, default="carts_latency", help='Calculate the distance between node and trigger point')
+   
     parser.add_argument('--root_path', type=str, default="./")
-    parser.add_argument('--data_path', type=str,default="metrics_compare_A2.csv")
+    parser.add_argument('--data_path', type=str,default="notime_data.csv")
     # parser.add_argument('--data_path', type=str,default="data/anomalous.csv")
     parser.add_argument('--num_workers', type=float, default=10)
-    parser.add_argument('--root_cause', type=str,default="os_017##Send_total")
+    parser.add_argument('--root_cause', type=str,default="carts_cpu")
 
     args = parser.parse_args()
 
