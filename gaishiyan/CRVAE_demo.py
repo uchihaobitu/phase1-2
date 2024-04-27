@@ -9,6 +9,7 @@ import os
 import numpy as np
 import torch
 
+from tua import plot_estimated_graph_v2
 from models.cgru_error import CRVAE, VRAE4E, train_phase1,train_phase2,train_phase3,train_phase4
 
 # 这里可以设置使用的GPU
@@ -85,7 +86,11 @@ np.save('GC_henon_A2.npy', GC_est)
 # plt.savefig('GC_henon.png')
 #
 # #np.save('GC_henon.npy', GC_est)
-full_connect = np.load('GC_henon_A2.npy')
+full_connect = np.load('carts_cpu_1.npy')
+threshold = 0.55
+full_connect = (full_connect > threshold).astype(int)
+np.save('carts_cpu_1_true.npy',full_connect)
+
 #
 #
 # #%%
@@ -99,3 +104,7 @@ train_loss_list = train_phase2(
     check_every=50,batch_size=128)
 GC_new = cgru.GC_gai().cpu().data.numpy()
 np.save('GC_henon_A2new.npy', GC_new)
+
+W1 = np.load('carts_cpu_1.npy')
+W2 = np.load('carts_cpu_1new.npy')
+plot_estimated_graph_v2(W1, W2)
