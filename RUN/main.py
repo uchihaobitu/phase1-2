@@ -48,7 +48,7 @@ def get_edge_pair(npzfile):
 
 def main(datafiles):
     # edge_pair, columns = Run(datafiles)
-    edge_pair = get_edge_pair("GC_henon_A2.npy")
+    edge_pair = get_edge_pair("carts_cpu_1_true.npy")
     pruning = pd.read_csv(args.root_path + '/' + args.data_path)
     columns = pruning.columns.tolist()
     # G = load_pretrain()
@@ -188,7 +188,7 @@ if __name__ == "__main__":
     parser.add_argument('--trigger_point', type=str, default="carts_latency", help='Calculate the distance between node and trigger point')
    
     parser.add_argument('--root_path', type=str, default="./")
-    parser.add_argument('--data_path', type=str,default="notime_data.csv")
+    parser.add_argument('--data_path', type=str,default="yichang_notime_data.csv")
     # parser.add_argument('--data_path', type=str,default="data/anomalous.csv")
     parser.add_argument('--num_workers', type=float, default=10)
     parser.add_argument('--root_cause', type=str,default="carts_cpu")
