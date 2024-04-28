@@ -68,21 +68,40 @@ def main(datafiles):
     plt.savefig(f"Graph.png")  # 保存图的可视化到文件
     plt.close()  # 关闭图形，防止在内存中过多积累
 
-
-    edge_correlations = {}
-    for source, target in tqdm(G.edges):
-        print('source',pruning[source])
-        print('target',pruning[target])
-        edge_correlations[(source, target)] = pearson_correlation(pruning[source], pruning[target])
-
     while not nx.is_directed_acyclic_graph(G):
-        print("Graph is not acyclic, remove edge with lowest correlation")
+        edge_cor = []
+        edges = G.edges()
+        # 使用tqdm包裹迭代器，显示进度条
+        for edge in tqdm(edges, desc="Processing edges"):
+            source, target = edge
+            x = pruning[source].values  # Convert column to numpy array
+            y = pruning[target].values
+            edge_cor.append(pearson_correlation(x, y))
+    
+        # Use torch for sorting
+        tmp = torch.tensor(edge_cor)
+        tmp_idx = torch.argsort(tmp)
+        edges = list(edges)
+        source, target = edges[tmp_idx[0]][0], edges[tmp_idx[0]][1]
+    
+        G.remove_edge(source, target)
+
+
+
+    # edge_correlations = {}
+    # for source, target in tqdm(G.edges):
+        # print('source',pruning[source])
+        # print('target',pruning[target])
+        # edge_correlations[(source, target)] = pearson_correlation(pruning[source], pruning[target])
+
+    # while not nx.is_directed_acyclic_graph(G):
+        # print("Graph is not acyclic, remove edge with lowest correlation")
         # 找到相关性最低的边
-        min_cor_edge = min(edge_correlations, key=edge_correlations.get)
+        # min_cor_edge = min(edge_correlations, key=edge_correlations.get)
         # 移除这条边
-        G.remove_edge(*min_cor_edge)
+        # G.remove_edge(*min_cor_edge)
         # 从字典中移除这条边的相关性
-        del edge_correlations[min_cor_edge]
+        # del edge_correlations[min_cor_edge]
         # edge_cor = []
         # edges = G.edges()
         # for edge in edges:
