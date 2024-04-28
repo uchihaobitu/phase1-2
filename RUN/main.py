@@ -1,6 +1,6 @@
 # import RUN
 import argparse
-# import torch
+import torch
 import pandas as pd
 import numpy as np
 import json
@@ -64,28 +64,46 @@ def main(datafiles):
 
     plt.title(f"Graph Visualization for Sample ")
     plt.figure(figsize=(100, 100))  # 增加图形尺寸
-    plt.show()
-    plt.savefig(f"Graph.png")  # 保存图的可视化到文件
+    # plt.show()
+    plt.savefig(f"Graphv0.png")  # 保存图的可视化到文件
     plt.close()  # 关闭图形，防止在内存中过多积累
 
+    # while not nx.is_directed_acyclic_graph(G):
+    #     edge_cor = []
+    #     edges = G.edges()
+    #     # 使用tqdm包裹迭代器，显示进度条
+    #     for edge in tqdm(edges, desc="Processing edges"):
+    #         source, target = edge
+    #         x = pruning[source].values  # Convert column to numpy array
+    #         y = pruning[target].values
+    #         edge_cor.append(pearson_correlation(x, y))
+    
+    #     # Use torch for sorting
+    #     tmp = torch.tensor(edge_cor)
+    #     tmp_idx = torch.argsort(tmp)
+    #     edges = list(edges)
+    #     source, target = edges[tmp_idx[0]][0], edges[tmp_idx[0]][1]
+    
+    #     G.remove_edge(source, target)
     while not nx.is_directed_acyclic_graph(G):
+        cycle = nx.find_cycle(G)  # 尝试找到一个环
+        if not cycle:
+            break  # 如果没有环，退出循环
+        
         edge_cor = []
-        edges = G.edges()
-        # 使用tqdm包裹迭代器，显示进度条
-        for edge in tqdm(edges, desc="Processing edges"):
+        # 仅对环中的边进行操作
+        for edge in tqdm(cycle, desc="Processing edges"):
             source, target = edge
             x = pruning[source].values  # Convert column to numpy array
             y = pruning[target].values
             edge_cor.append(pearson_correlation(x, y))
-    
-        # Use torch for sorting
+
+        # 使用torch对相关性进行排序
         tmp = torch.tensor(edge_cor)
         tmp_idx = torch.argsort(tmp)
-        edges = list(edges)
-        source, target = edges[tmp_idx[0]][0], edges[tmp_idx[0]][1]
-    
+        # 删除相关性最低的边，从而尝试破坏环
+        source, target = cycle[tmp_idx[0]][0], cycle[tmp_idx[0]][1]
         G.remove_edge(source, target)
-
 
 
     # edge_correlations = {}
@@ -120,8 +138,8 @@ def main(datafiles):
 
     plt.title(f"Graph Visualization for Sample ")
 
-    plt.show()
-    plt.savefig(f"Graph.png")  # 保存图的可视化到文件
+    # plt.show()
+    plt.savefig(f"Graphv1.png")  # 保存图的可视化到文件
     plt.close()  # 关闭图形，防止在内存中过多积累
 
  
